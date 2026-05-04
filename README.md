@@ -1,6 +1,6 @@
 # Personality Assessment
 
-Deployable Vercel package for an integrated personality self-assessment.
+Source-first Vite/React app for an integrated personality self-assessment.
 
 The app includes:
 
@@ -26,5 +26,7 @@ Anthropic is also supported by setting `AI_PROVIDER=anthropic` and `ANTHROPIC_AP
 ## Commands
 
 ```bash
+npm install
+npm run dev
 npm run build
 ```
