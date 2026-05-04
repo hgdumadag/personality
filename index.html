@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="An integrated personality self-assessment using Big Five, Four Temperaments, and MBTI-style mapping."
+    />
+    <title>Personality Assessment</title>
+    <script type="module" crossorigin src="/assets/app-fixed-20260503.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/app-fixed-20260503.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      (() => {
+        const blockId = 'temperament-explainer';
+        const colors = {
+          cream: '#FBF7EE',
+          rule: '#D9CDB6',
+          ink: '#1F2238',
+          ink2: '#3A3D55',
+          muted: '#8C8475',
+          accent: '#C8553D',
+          sage: '#6B8E6B'
+        };
+
+        function makeLine(title, text) {
+          const item = document.createElement('div');
+          item.style.cssText = 'border-left:2px solid ' + colors.sage + '; padding-left:14px;';
+
+          const heading = document.createElement('div');
+          heading.textContent = title;
+          heading.style.cssText = 'font-family:Manrope,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:' + colors.muted + '; margin-bottom:4px;';
+
+          const copy = document.createElement('p');
+          copy.textContent = text;
+          copy.style.cssText = 'font-family:Manrope,sans-serif; font-size:13px; line-height:1.6; color:' + colors.ink2 + '; margin:0;';
+
+          item.append(heading, copy);
+          return item;
+        }
+
+        function buildExplainer() {
+          const wrap = document.createElement('section');
+          wrap.id = blockId;
+          wrap.style.cssText = 'background:' + colors.cream + '; border:1px solid ' + colors.rule + '; padding:22px; margin:24px 0; display:flex; flex-direction:column; gap:16px;';
+
+          const title = document.createElement('h3');
+          title.textContent = 'How to read this result';
+          title.style.cssText = 'font-family:Fraunces,serif; font-style:italic; font-weight:500; font-size:24px; color:' + colors.ink + '; margin:0;';
+
+          const intro = document.createElement('p');
+          intro.textContent = 'Temperament is a quick lens for emotional pace and social energy. It is useful for reflection, but it should be read alongside your Big Five scores rather than treated as a fixed identity.';
+          intro.style.cssText = 'font-family:Manrope,sans-serif; font-size:14px; line-height:1.65; color:' + colors.ink2 + '; margin:0;';
+
+          wrap.append(
+            title,
+            intro,
+            makeLine('Primary temperament', 'This is the quadrant your Extraversion and Neuroticism scores place you closest to. It describes your most likely default under ordinary conditions.'),
+            makeLine('Secondary lean', 'Your secondary temperament shows the neighboring style you may shift into depending on pressure, setting, or who you are with.'),
+            makeLine('Profile clarity', 'Clear means your scores sit away from the center. Mixed means you are close to the midpoint, so context may shape how your temperament shows up.'),
+            makeLine('The two axes', 'Extraversion tracks outward social energy. Neuroticism tracks emotional reactivity under stress. Together they form the four temperament quadrants.')
+          );
+          return wrap;
+        }
+
+        function enhanceTemperament() {
+          const existing = document.getElementById(blockId);
+          if (!document.body.textContent.includes('Eysenck two-axis model')) {
+            existing?.remove();
+            return;
+          }
+          const marker = Array.from(document.querySelectorAll('div, p')).find((node) =>
+            node.textContent && node.textContent.includes('The Four Temperaments are mapped from Extraversion')
+          );
+          if (!marker) {
+            existing?.remove();
+            return;
+          }
+          if (existing) return;
+          if (!marker || !marker.parentElement) return;
+          marker.insertAdjacentElement('afterend', buildExplainer());
+        }
+
+        const observer = new MutationObserver(enhanceTemperament);
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+        window.addEventListener('load', enhanceTemperament);
+        document.addEventListener('click', () => {
+          document.getElementById(blockId)?.remove();
+          setTimeout(enhanceTemperament, 0);
+        });
+      })();
+
+      (() => {
+        const blockId = 'mbti-explainer';
+        const colors = {
+          cream: '#FBF7EE',
+          rule: '#D9CDB6',
+          ink: '#1F2238',
+          ink2: '#3A3D55',
+          muted: '#8C8475',
+          accent: '#C8553D',
+          ochre: '#D9A441'
+        };
+
+        function makeLine(title, text) {
+          const item = document.createElement('div');
+          item.style.cssText = 'border-left:2px solid ' + colors.ochre + '; padding-left:14px;';
+
+          const heading = document.createElement('div');
+          heading.textContent = title;
+          heading.style.cssText = 'font-family:Manrope,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:' + colors.muted + '; margin-bottom:4px;';
+
+          const copy = document.createElement('p');
+          copy.textContent = text;
+          copy.style.cssText = 'font-family:Manrope,sans-serif; font-size:13px; line-height:1.6; color:' + colors.ink2 + '; margin:0;';
+
+          item.append(heading, copy);
+          return item;
+        }
+
+        function buildExplainer() {
+          const wrap = document.createElement('section');
+          wrap.id = blockId;
+          wrap.style.cssText = 'background:' + colors.cream + '; border:1px solid ' + colors.rule + '; padding:22px; margin:24px 0; display:flex; flex-direction:column; gap:16px;';
+
+          const title = document.createElement('h3');
+          title.textContent = 'What the letters mean';
+          title.style.cssText = 'font-family:Fraunces,serif; font-style:italic; font-weight:500; font-size:24px; color:' + colors.ink + '; margin:0;';
+
+          const intro = document.createElement('p');
+          intro.textContent = 'This is an MBTI-style translation of your Big Five scores and bridge questions. Each letter points to the side of a preference pair you leaned toward, not a permanent box.';
+          intro.style.cssText = 'font-family:Manrope,sans-serif; font-size:14px; line-height:1.65; color:' + colors.ink2 + '; margin:0;';
+
+          wrap.append(
+            title,
+            intro,
+            makeLine('I / E', 'Introversion and Extraversion describe where your attention and energy tend to go: inward reflection or outward interaction.'),
+            makeLine('S / N', 'Sensing and Intuition describe whether you lean more toward concrete facts and details or patterns, meanings, and possibilities.'),
+            makeLine('T / F', 'Thinking and Feeling describe whether decisions tend to be weighed more through impersonal logic or people-centered impact and values.'),
+            makeLine('J / P', 'Judging and Perceiving describe your preferred relationship to structure: closure, plans, and decisions, or flexibility, openness, and adaptation.'),
+            makeLine('Clarity', 'A high clarity score means you leaned strongly toward one side. A low clarity score means that preference is closer to balanced or context-dependent.')
+          );
+          return wrap;
+        }
+
+        function enhanceMbti() {
+          const existing = document.getElementById(blockId);
+          if (!document.body.textContent.includes('official MBTI instrument')) {
+            existing?.remove();
+            return;
+          }
+          const marker = Array.from(document.querySelectorAll('div, p')).find((node) =>
+            node.textContent && node.textContent.includes('This is an MBTI-style mapping derived from your Big Five')
+          );
+          if (!marker) {
+            existing?.remove();
+            return;
+          }
+          if (existing) return;
+          if (!marker || !marker.parentElement) return;
+          marker.insertAdjacentElement('afterend', buildExplainer());
+        }
+
+        const observer = new MutationObserver(enhanceMbti);
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+        window.addEventListener('load', enhanceMbti);
+        document.addEventListener('click', () => {
+          document.getElementById(blockId)?.remove();
+          setTimeout(enhanceMbti, 0);
+        });
+      })();
+    </script>
+  </body>
+</html>
